@@ -5,6 +5,7 @@ import router from './router';
 import Argon from './plugins/argon-kit';
 import './registerServiceWorker';
 import store from './store/index.js'
+// comment
 Vue.use(Vuex);  // Vuex is used here
 
 
