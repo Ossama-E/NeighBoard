@@ -21,11 +21,12 @@
                         <template>
                             <form role="form">
                                 <base-input alternative
+                                v-model.trim="email"
                                             class="mb-3"
                                             placeholder="Email"
                                             addon-left-icon="ni ni-email-83">
                                 </base-input>
-                                <base-input v-model="password"
+                                <base-input v-model.trim="password"
                                             alternative
                                             type="password"
                                             placeholder="Password"
@@ -63,8 +64,20 @@
 export default {
     data() {
         return{
-            password: 'temp pass'
+            password: 'temp pass',
+            mode: 'login',
+            formIsValid: false,
         }
+    },
+    methods: {
+        submitForm() {
+            if(this.email === '' || !this.email.includes('@') || this.password.length < 6) {
+                this.formIsValid = false;
+                return;
+            }
+            // send request
+
+        },
     }
 };
 </script>

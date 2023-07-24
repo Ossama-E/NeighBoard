@@ -1,5 +1,6 @@
 <template>
   <div class="profile-page">
+    
     <section class="section-shaped my-0">
     </section>
     <div class="position-relative">
@@ -19,8 +20,9 @@
                                 </div>
                               </section>
                                 </div>
+                                <AddPostModal :modalData="postData"/>
       <div class="container">
-        <div v-for="post in posts" :key="post.title">
+        <div v-for="post in postsList" :key="post.title">
         <card shadow class="posts card-profile mt-5">
           <!-- Card content -->
           <div class="px-4">
@@ -50,10 +52,17 @@
       </div>
     </div>
   </div>
+  
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import AddPostModal from '@/components/AddPostModal.vue';
 export default {
+  created() {
+    console.log('created')
+    console.log('the getter', this.$store.getters['posts/posts']);
+  },
   props: {
     type: {
       type: String,
@@ -85,6 +94,22 @@ export default {
         return 'text-primary text-uppercase';
       }
     },
+  },
+  components: {
+    AddPostModal,
+  },
+  data() {
+    return {
+      postData: {
+        showModal: false,
+        
+      },
+    }
+  }, 
+  computed: {
+    postsList() {
+      return this.$store.getters.posts
+    }
   }
 }
 </script>

@@ -40,8 +40,8 @@
                   placeholder="The Address You're Concerned About"
                   addon-left-icon="ni ni-map-big"
                 ></base-input>
-                <base-button type="default" round block size="lg">
-                  Send Message
+                <base-button type="primary" round block size="lg">
+                  Explore posts
                 </base-button>
               </card>
             </div>

@@ -62,7 +62,7 @@ export default new Router({
     },
     {
       path: "/viewposts",
-      name: "posts]",
+      name: "posts",
       components: {
         header: AppHeader,
         default: ViewPosts,
@@ -71,7 +71,7 @@ export default new Router({
     },
     {
       path: "/tryproduct",
-      name: "posts]",
+      name: "try_product",
       components: {
         header: AppHeader,
         default: TryProduct,
