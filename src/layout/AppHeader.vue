@@ -18,8 +18,8 @@
 
             <ul class="navbar-nav navbar-nav-hover align-items-lg-center">
                 <router-link to="/landing" class="nav-link">Home</router-link>
-                <router-link to="/register" class="nav-link">Register</router-link>
-                <router-link to="/login" class="nav-link">Login</router-link>
+                <router-link to="/register" v-if="!isAuthenticated" class="nav-link">Register</router-link>
+                <router-link to="/login" v-if="!isAuthenticated" class="nav-link">Login</router-link>
                 <base-dropdown tag="li" class="nav-item">
                     <a slot="title" href="#" class="nav-link" data-toggle="dropdown" role="button">
                         <i class="ni ni-collection d-lg-none"></i>
@@ -46,13 +46,21 @@
                         <span class="nav-link-inner--text d-lg-none">Github</span>
                     </a>
                 </li>
-                <li class="nav-item d-none d-lg-block ml-lg-4">
+                <li class="nav-item d-none d-lg-block ml-lg-4" v-if="!isAuthenticated">
                 <router-link to="/tryproduct" class="btn btn-neutral btn-icon">
                 <span class="btn-inner--icon">
                     <i class="ni ni-user-run mr-2"></i>
                 </span>
-                <span class="nav-link-inner--text">Try without registering</span>
+                <span class="nav-link-inner--text">Try Product as Guest</span>
                 </router-link>
+                </li>
+                <li class="nav-item d-none d-lg-block ml-lg-4" v-if="isAuthenticated">
+                <div  class="btn btn-neutral btn-icon">
+                <span class="btn-inner--icon">
+                    <i class="ni ni-user-run mr-2"></i>
+                </span>
+                <span @click="logout" class="nav-link-inner--text">Logout</span>
+            </div>
                 </li>
             </ul>
         </base-nav>
@@ -68,6 +76,17 @@ export default {
     BaseNav,
     CloseButton,
     BaseDropdown
+  },
+  computed: {
+    isAuthenticated() {
+        return this.$store.getters['auth/isAuthenticated']
+    }
+  },
+  methods:{
+    logout() {
+        this.$store.dispatch('auth/logout')
+        console.log('logging out');
+    }
   }
 };
 </script>

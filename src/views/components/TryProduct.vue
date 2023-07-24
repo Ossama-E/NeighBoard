@@ -28,7 +28,6 @@
             <div>
               <card gradient="secondary" shadow body-classes="p-lg-5">
                 <h4 class="mb-1">Lucky you, you get to try our product :)</h4>
-                <p class="mt-0">Your feedback is very important to us.</p>
                 <base-input
                   class="mt-5"
                   alternative

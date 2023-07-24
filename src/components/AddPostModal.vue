@@ -1,9 +1,11 @@
 <template>
   <div class="text-center">
-    <base-button  type="primary" text-align="center" class=" mb-3" @click="modalData.showModal = true">
+    <base-button  type="primary" text-align="center" class=" mb-3" @click="canAddPost">
         Add Post
     </base-button>
-
+    <base-alert v-if="showAlert" type="warning">
+        <strong>Warning!</strong> You need to be logged in and create an account
+    </base-alert>
     <modal :show.sync="modalData.showModal"
           body-classes="p-0"
           modal-classes="modal-dialog-centered modal-lg">
@@ -51,7 +53,9 @@ import axios from 'axios'
 import Modal from "@/components/Modal.vue";
 export default {
   data() {
-    return {};
+    return {
+      showAlert: false,
+    };
   },
   props: {
     modalData: {
@@ -67,6 +71,15 @@ export default {
     Modal
   },
   methods: {
+    canAddPost() {
+      if (this.isAuthenticated) this.modalData.showModal = true 
+      else {
+        this.showAlert = true
+        setTimeout(() => {
+                    this.showAlert = false;
+                }, 1000);
+        }
+    },
     exitModal() {
       this.modalData.description = this.modalData.title = this.modalData.address = ''
       this.modalData.showModal = false;
@@ -74,9 +87,15 @@ export default {
     addPost() {
       console.log('got a post request with this post', this.modalData)
       const apiURL = process.env.VUE_APP_FIREBASE_API_URL;
-      console.log('api url', apiURL);
-      axios.post(`${apiURL}/testdata.json`, this.modalData).then(res => console.log(res)).catch(err => console.log(err))
-      axios.get(`${apiURL}/testdata.json`).then(res => console.log('reults', res)).catch(err => console.log('error ', err))
+      const userId = this.$store.getters['auth/userId']
+      const token =  this.$store.getters['auth/token']
+      axios.post(`${apiURL}/testdata/${userId}.json?auth=` + token, this.modalData).then(res => console.log(res)).catch(err => console.log(err))
+      // axios.get(`${apiURL}/testdata.json`).then(res => console.log('reults', res)).catch(err => console.log('error ', err))
+    }
+  },
+  computed: {
+    isAuthenticated() {
+        return this.$store.getters['auth/isAuthenticated']
     }
   },
 };</script>
