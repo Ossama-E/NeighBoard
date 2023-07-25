@@ -1,7 +1,7 @@
 <template>
     <header class="header-global">
         <base-nav class="navbar-main" transparent type="" effect="light" expand>
-            <router-link slot="brand" class="navbar-brand mr-lg-5" to="/">
+            <router-link slot="brand" class="navbar-brand mr-lg-5" to="/landing">
                 <img src="img/brand/white.png">
             </router-link>
 

@@ -107,7 +107,6 @@
           </div>
         </div>
       </section>
-      <AddPostModal />
     </div>
     <!-- <card gradient="secondary" shadow body-classes="p-lg-5">
                               <h4 class="mb-1">Want to work with us?</h4>
@@ -132,12 +131,9 @@
   </template>
   
   <script>
-  import AddPostModal from '../components/AddPostModal.vue';
+
   export default {
     name: "home",
-    components: {
-      AddPostModal,
-    },
     computed: {
       isAuthenticated() {
           return this.$store.getters['auth/isAuthenticated']

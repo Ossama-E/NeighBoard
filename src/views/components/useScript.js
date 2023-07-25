@@ -1,6 +1,4 @@
-import { onUnmounted } from "vue";
-
-export default function useScript(src) {
+export default function (src) {
   return new Promise((resolve, reject) => {
     let script = document.querySelector(`script[src="${src}"]`);
 
@@ -16,12 +14,12 @@ export default function useScript(src) {
       resolve();
     }
 
-    function onScriptLoad() {
+    const onScriptLoad = () => {
       resolve();
       script.setAttribute("data-status", "loaded");
     }
 
-    function onScriptError() {
+    const onScriptError = () => {
       reject();
       script.setAttribute("data-status", "error");
     }
@@ -29,12 +27,14 @@ export default function useScript(src) {
     script.addEventListener("load", onScriptLoad);
     script.addEventListener("error", onScriptError);
 
-    onUnmounted(() => {
+    const cleanup = () => {
       if (document.head.contains(script)) {
         script.removeEventListener("load", onScriptLoad);
         script.removeEventListener("error", onScriptError);
         document.head.removeChild(script);
       }
-    });
+    };
+
+    return cleanup;
   });
 }

@@ -25,7 +25,7 @@
         </span>
         </div>
         <slot v-bind="slotData">
-            <input
+            <input  ref="inputRef"
                     :value="value"
                     v-on="listeners"
                     v-bind="$attrs"
@@ -137,7 +137,10 @@ export default {
     onBlur(value) {
       this.focused = false;
       this.$emit("blur", value);
-    }
+    },
+    getInputRef() {
+      return this.$refs.inputRef;
+    },
   }
 };
 </script>

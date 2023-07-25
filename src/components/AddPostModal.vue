@@ -1,66 +1,95 @@
 <template>
   <div class="text-center">
-    <base-button v-if="!attemptedPost"  type="primary" text-align="center" class=" mb-3" @click="canAddPost">
-        Add Post
+    <base-button
+      v-if="!attemptedPost"
+      type="primary"
+      text-align="center"
+      class="mb-3"
+      @click="canAddPost"
+    >
+      Add Post
     </base-button>
     <router-link to="/register">
-      <base-button  v-if="attemptedPost" type="primary" text-align="center" class=" mb-3" @click="canAddPost">
-          Create an account
+      <base-button
+        v-if="attemptedPost"
+        type="primary"
+        text-align="center"
+        class="mb-3"
+        @click="canAddPost"
+      >
+        Create an account
       </base-button>
-  </router-link>
+    </router-link>
     <base-alert v-if="showAlert" type="warning">
-        <strong>Warning!</strong> You need to have an account to be able to post
+      <strong>Warning!</strong> You need to have an account to be able to post
     </base-alert>
-    <modal :show.sync="modalData.showModal"
-          body-classes="p-0"
-          modal-classes="modal-dialog-centered modal-lg">
-        <card type="secondary" shadow 
-              header-classes="bg-white pb-5"
-              body-classes="px-lg-5 py-lg-5"
-              class="border-0">
-              <div class="text-muted text-center mb-3">
-                  <h3>Add a Post</h3>
-              </div>
-            <template>
-                <form role="form">
-                    <base-input
-                                alternative
-                                v-model="modalData.title"
-                                class="mb-3"
-                                placeholder="Title"
-                                addon-left-icon="ni ni-bold">
-                    </base-input>
-                    <base-input alternative
-                                v-model="modalData.address"
-                                type="address"
-                                placeholder="Address"
-                                addon-left-icon="ni ni-map-big">
-                    </base-input>
-                    <form addon-left-icon="ni ni-map-big">
-                      
-                      <textarea  v-model="modalData.description" class="form-control form-control-alternative" rows="3" placeholder="Description"></textarea>
-                    </form>
-                    <div class="text-right">
-                      <base-button outline type="primary" class="my-4" @click="exitModal">Back</base-button>
-                      <base-button type="primary" class="my-4" @click="addPost">Post</base-button>
-                    </div>
-                </form>
-            </template>
-        </card>
+    <modal
+      :show.sync="showModal"
+      body-classes="p-0"
+      modal-classes="modal-dialog-centered modal-lg"
+    >
+      <card
+        type="secondary"
+        shadow
+        header-classes="bg-white pb-5"
+        body-classes="px-lg-5 py-lg-5"
+        class="border-0"
+      >
+        <div class="text-muted text-center mb-3">
+          <h3>Add a Post</h3>
+        </div>
+        <template>
+          <form role="form">
+            <base-input
+              alternative
+              v-model.trim="modalData.title"
+              class="mb-3"
+              placeholder="Title"
+              addon-left-icon="ni ni-bold"
+            >
+            </base-input>
+            <AddressField
+              :key="componentKey"
+              :address-data="modalData.addressData"
+            />
+            <form addon-left-icon="ni ni-map-big">
+              <textarea
+                v-model.trim="modalData.description"
+                class="form-control form-control-alternative"
+                rows="3"
+                placeholder="Description"
+              ></textarea>
+            </form>
+            <div class="text-right">
+              <base-button
+                outline
+                type="primary"
+                class="my-4"
+                @click="exitModal"
+                >Back</base-button
+              >
+              <base-button type="primary" class="my-4" @click="addPost"
+                >Post</base-button
+              >
+            </div>
+          </form>
+        </template>
+      </card>
     </modal>
   </div>
 </template>
 
 <script>
-
-
-import axios from 'axios'
 import Modal from "@/components/Modal.vue";
+import AddressField from '../views/components/AddressField.vue';
+import { sendPost } from '../Requests.js'
 export default {
   data() {
     return {
       showAlert: false,
       attemptedPost: false,
+      componentKey: 0,
+      showModal: false,
     };
   },
   created() {
@@ -70,21 +99,21 @@ export default {
     modalData: {
       type: Object,
       default: () => {
-          return {
-            showModal: false,
-          }
+          return {}
         },
       },
   },
   components :{
-    Modal
+    Modal,
+    AddressField,
   },
   methods: {
     canAddPost() {
-      if (this.isAuthenticated) this.modalData.showModal = true 
+      if (this.isAuthenticated) this.showModal = true
       else {
         this.showAlert = true
         this.attemptedPost = true,
+        this.componentKey = Math.random();
         setTimeout(() => {
                     this.showAlert = false;
                 }, 2000);
@@ -92,15 +121,14 @@ export default {
     },
     exitModal() {
       this.modalData.description = this.modalData.title = this.modalData.address = ''
-      this.modalData.showModal = false;
+      this.showModal = false;
     },
     addPost() {
       console.log('got a post request with this post', this.modalData)
-      const apiURL = process.env.VUE_APP_FIREBASE_API_URL;
-      const userId = this.$store.getters['auth/userId']
-      const token =  this.$store.getters['auth/token']
-      axios.post(`${apiURL}/testdata/${userId}.json?auth=` + token, this.modalData).then(res => console.log(res)).catch(err => console.log(err))
-      // axios.get(`${apiURL}/testdata.json`).then(res => console.log('reults', res)).catch(err => console.log('error ', err))
+      const userId = this.$store.getters['auth/userId'];
+      const token =  this.$store.getters['auth/token'];
+      console.log('user id and token', userId, token)
+      sendPost(this.modalData, userId, token)
     }
   },
   computed: {
@@ -108,4 +136,5 @@ export default {
         return this.$store.getters['auth/isAuthenticated']
     },
   },
-};</script>
+};
+</script>

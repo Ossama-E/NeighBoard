@@ -140,6 +140,7 @@ export default {
         successLogin() {
             this.loginData.email = this.loginData.password = ''
             this.validLogin = true
+            this.$router.replace('/viewposts')
             setTimeout(() => {
                 this.validLogin = false;
             }, 3000);
