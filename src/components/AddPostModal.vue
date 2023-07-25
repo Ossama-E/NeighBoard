@@ -1,15 +1,20 @@
 <template>
   <div class="text-center">
-    <base-button  type="primary" text-align="center" class=" mb-3" @click="canAddPost">
+    <base-button v-if="!attemptedPost"  type="primary" text-align="center" class=" mb-3" @click="canAddPost">
         Add Post
     </base-button>
+    <router-link to="/register">
+      <base-button  v-if="attemptedPost" type="primary" text-align="center" class=" mb-3" @click="canAddPost">
+          Create an account
+      </base-button>
+  </router-link>
     <base-alert v-if="showAlert" type="warning">
-        <strong>Warning!</strong> You need to be logged in and create an account
+        <strong>Warning!</strong> You need to have an account to be able to post
     </base-alert>
     <modal :show.sync="modalData.showModal"
           body-classes="p-0"
           modal-classes="modal-dialog-centered modal-lg">
-        <card type="secondary" shadow
+        <card type="secondary" shadow 
               header-classes="bg-white pb-5"
               body-classes="px-lg-5 py-lg-5"
               class="border-0">
@@ -55,7 +60,11 @@ export default {
   data() {
     return {
       showAlert: false,
+      attemptedPost: false,
     };
+  },
+  created() {
+    this.attemptedPost = false
   },
   props: {
     modalData: {
@@ -75,9 +84,10 @@ export default {
       if (this.isAuthenticated) this.modalData.showModal = true 
       else {
         this.showAlert = true
+        this.attemptedPost = true,
         setTimeout(() => {
                     this.showAlert = false;
-                }, 1000);
+                }, 2000);
         }
     },
     exitModal() {
@@ -96,6 +106,6 @@ export default {
   computed: {
     isAuthenticated() {
         return this.$store.getters['auth/isAuthenticated']
-    }
+    },
   },
 };</script>

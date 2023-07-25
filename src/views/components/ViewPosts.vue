@@ -91,7 +91,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 import AddPostModal from '@/components/AddPostModal.vue';
 export default {
   created() {
