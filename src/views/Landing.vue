@@ -150,7 +150,7 @@
     name: "home",
     computed: {
       isAuthenticated() {
-          return this.$store.getters['auth/isAuthenticated']
+          return this.$store.getters['isAuthenticated']
       }
     }
   };

@@ -110,7 +110,7 @@ import {getAccount} from '../Requests.js'
 export default {
     async mounted(){
         
-        const userId = this.$store.getters['auth/userId'];
+        const userId = this.$store.getters['userId'];
         const apiURL = process.env.VUE_APP_FIREBASE_API_URL;
         getAccount(apiURL, userId).then(response => { 
             console.log(response)

@@ -13,8 +13,23 @@
 import { FadeTransition } from "vue2-transitions";
 
 export default {
+  created(){
+    this.$store.dispatch('tryLogin')
+  },
   components: {
     FadeTransition
+  },
+  computed: {
+    sessionTimedOut() {
+      return this.$store.getters.sessionTimedOut
+    },
+  },
+  watch: {
+    sessionTimedOut(currValue, oldValue) {
+      if (currValue && currValue != oldValue) {
+        this.$router.replace('/login')
+      }
+    }
   }
 };
 </script>

@@ -8,9 +8,9 @@ export default {
       userId: null,
       token: null, 
       tokenExpiration: null,
+      sessionTimedOut: false,
     }
   },
-  namespaced: true,
   mutations,
   getters,
   actions

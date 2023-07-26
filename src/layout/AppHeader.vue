@@ -1,7 +1,7 @@
 <template>
     <header class="header-global">
         <base-nav class="navbar-main" transparent type="" effect="light" expand>
-            <router-link slot="brand" class="navbar-brand mr-lg-5" to="/landing">
+            <router-link slot="brand" class="navbar-brand mr-lg-5" to="/">
                 <img src="img/brand/white.png" alt="logo">
             </router-link>
 
@@ -18,9 +18,10 @@
 
             <ul class="navbar-nav navbar-nav-hover align-items-lg-center">
                 
-                <router-link to="/landing" class="nav-link">Home</router-link>
+                <router-link to="/" class="nav-link">Home</router-link>
                 <router-link to="/register" v-if="!isAuthenticated" class="nav-link">Register</router-link>
                 <router-link to="/login" v-if="!isAuthenticated" class="nav-link">Login</router-link>
+                <router-link to="/viewposts" v-if="isAuthenticated" class="nav-link">Explore Posts</router-link>
                 <base-dropdown tag="li" class="nav-item">
                     <a slot="title" href="#" class="nav-link" data-toggle="dropdown" role="button">
                         <i class="ni ni-collection d-lg-none"></i>
@@ -82,12 +83,12 @@ export default {
   },
   computed: {
     isAuthenticated() {
-        return this.$store.getters['auth/isAuthenticated']
+        return this.$store.getters['isAuthenticated']
     }
   },
   methods:{
     logout() {
-        this.$store.dispatch('auth/logout')
+        this.$store.dispatch('logout')
         this.$router.replace('/login')
     }
   }

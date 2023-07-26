@@ -124,8 +124,8 @@ export default {
       this.showModal = false;
     },
     addPost() {
-      const userId = this.$store.getters['auth/userId'];
-      const token =  this.$store.getters['auth/token'];
+      const userId = this.$store.getters['userId'];
+      const token =  this.$store.getters['token'];
       sendPost(this.modalData, userId, token)
       .then(() => {this.$emit('new-post')
       this.exitModal()})
@@ -135,7 +135,7 @@ export default {
   },
   computed: {
     isAuthenticated() {
-        return this.$store.getters['auth/isAuthenticated']
+        return this.$store.getters['isAuthenticated']
     },
   },
 };

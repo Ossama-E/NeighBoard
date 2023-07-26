@@ -109,7 +109,7 @@ export default {
         if (this.validEmail && this.validPassword) {
             this.isLoading = true;
             this.$store
-                .dispatch('auth/login', {
+                .dispatch('login', {
                     email: this.loginData.email,
                     password: this.loginData.password,
                 })
@@ -134,7 +134,7 @@ export default {
         successLogin() {
             this.loginData.email = this.loginData.password = ''
             this.validLogin = true
-            this.$router.replace('/landing')
+            this.$router.replace('/')
             setTimeout(() => {
                 this.validLogin = false;
             }, 3000);
@@ -144,7 +144,6 @@ export default {
     computed: {
         validEmail(){
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            console.log('the regex', emailRegex.test(this.loginData.email));
             return this.loginData.email && emailRegex.test(this.loginData.email);
         },
         validPassword() {
