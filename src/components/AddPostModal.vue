@@ -126,8 +126,10 @@ export default {
     addPost() {
       const userId = this.$store.getters['auth/userId'];
       const token =  this.$store.getters['auth/token'];
-      sendPost(this.modalData, userId, token).then(this.$emit('new-post')).catch(err => console.log('error in sendPost', err))
-      this.exitModal()
+      sendPost(this.modalData, userId, token)
+      .then(() => {this.$emit('new-post')
+      this.exitModal()})
+      .catch(err => console.log('error in sendPost', err)).then()
       
     }
   },
