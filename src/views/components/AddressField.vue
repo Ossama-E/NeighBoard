@@ -39,25 +39,23 @@ export default {
           let place = autocomplete.getPlace();
           let postalCode = null;
           let fullAddress = place.formatted_address;
+          this.addressData.fullAddress = fullAddress
+          this.userInput = fullAddress;
           let neighbourhood = null;
           for (let i = 0; i < place.address_components.length; i++) {
             let addressType = place.address_components[i].types[0];
             if (addressType === 'postal_code') {
               postalCode = place.address_components[i]['long_name'];
-              break;
+              this.addressData.postalCode = postalCode;
             }
             if (addressType === 'neighborhood') {
               neighbourhood = place.address_components[i]['long_name'];
+              this.addressData.neighbourhood = neighbourhood;
             }
             if(postalCode && neighbourhood) {
               break;
             }
           }
-
-          this.userInput = fullAddress;
-          this.addressData.postalCode = postalCode;
-          this.addressData.neighbourhood = neighbourhood;
-          this.addressData.fullAddress = fullAddress
         });
         });
       });

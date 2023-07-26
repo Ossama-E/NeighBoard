@@ -18,7 +18,7 @@
             <div class="px-4">
               <div class="text-center mt-5">
                 <h5>Please enter the address you'd like to check out</h5>
-                <address-field :address-data="addressData" />
+                <address-field :address-data="searchAddressData" />
                 <base-button
                   type="primary"
                   round
@@ -32,7 +32,10 @@
               <div class="mt-5 py-5 border-top text-center">
                 <div class="row justify-content-center">
                   <div class="col-lg-9">
-                    <AddPostModal :modalData="postData" />
+                    <AddPostModal
+                      @new-post="refreshTable"
+                      :modalData="postData"
+                    />
                   </div>
                 </div>
               </div>
@@ -42,7 +45,7 @@
       </section>
     </div>
 
-    <div class="container">
+    <div v-if="showList" class="container">
       <div v-for="post in postsList" :key="post.title">
         <card shadow class="posts card-profile mt-5">
           <div class="px-4">
@@ -79,15 +82,20 @@
               ></icon>
               <h3>{{post.title}}</h3>
               <div class="h6 font-weight-300">
-                <i class="ni location_pin mr-2"></i>{{ post.addressData.fullAddress }}
+                <i class="ni location_pin mr-2"></i
+                >{{ post.addressData.fullAddress }}
               </div>
               <div class="h6 mt-4">
-                <i class="ni business_briefcase-24 mr-2"></i>{{ post.description }}
+                <i class="ni business_briefcase-24 mr-2"></i
+                >{{ post.description }}
               </div>
             </div>
           </div>
         </card>
       </div>
+    </div>
+    <div v-else>
+      <p class="text-center mt-5">There are no posts to display.</p>
     </div>
   </div>
 </template>
@@ -97,17 +105,17 @@ import AddPostModal from '@/components/AddPostModal.vue';
 import AddressField from './AddressField.vue';
 import { getPostsByNeighbourhood } from '../../Requests.js'
 export default {
-  data(){
-    return{
+  data() {
+    return {
       postsList: [],
       postData: {
         showModal: false,
         addressData: {},
       },
-      addressData: {},
+      searchAddressData: {},
+      showList: true,
     }
   },
-
   methods: {
     getTextClass(type) {
       if (type === 'warning') {
@@ -117,21 +125,24 @@ export default {
       }
     },
     explorePosts() {
-      console.log('got a explore posts by neighbourhood request with this neighbourhood', this.addressData.neighbourhood)
-      getPostsByNeighbourhood(this.addressData.neighbourhood)
-      .then(res => {console.log('posts from searching for this neighbhood, ', res.data.posts)
-    this.postsList =res.data.posts})
+      console.log('explorePosts with this parameters', this.searchAddressData.neighbourhood)
+      getPostsByNeighbourhood(this.searchAddressData.neighbourhood)
+      .then(res => {
+        console.log(res)
+  res.data ? this.postsList = res.data.posts : this.showList = false
+
+})
+
       .catch(err => console.log(err))
+    },
+    refreshTable() {
+      console.log('asked to refresh');
+
     }
   },
   components: {
     AddPostModal,
     AddressField
-  },
-  watch: {
-    postsList(newVal) {
-      console.log('new posts', newVal)
-    }
   },
 }
 </script>

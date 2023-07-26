@@ -124,11 +124,11 @@ export default {
       this.showModal = false;
     },
     addPost() {
-      console.log('got a post request with this post', this.modalData)
       const userId = this.$store.getters['auth/userId'];
       const token =  this.$store.getters['auth/token'];
-      console.log('user id and token', userId, token)
-      sendPost(this.modalData, userId, token)
+      sendPost(this.modalData, userId, token).then(this.$emit('new-post')).catch(err => console.log('error in sendPost', err))
+      this.exitModal()
+      
     }
   },
   computed: {

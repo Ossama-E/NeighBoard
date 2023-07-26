@@ -122,7 +122,6 @@ export default {
   props: {},
   methods: {
     explorePosts() {
-      console.log('got a explore posts by neighbourhood request with this neighbourhood', this.addressData.neighbourhood)
       // const userId = this.$store.getters['auth/userId'];
       // const token =  this.$store.getters['auth/token'];
       getPostsByNeighbourhood(this.addressData.neighbourhood)

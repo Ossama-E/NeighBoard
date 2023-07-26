@@ -107,10 +107,6 @@ export default {
     methods: {
         submitForm() {
         if (this.validEmail && this.validPassword) {
-            console.log('proper login', {
-                    email: this.loginData.email,
-                    password: this.loginData.password,
-                });
             this.isLoading = true;
             this.$store
                 .dispatch('auth/login', {
@@ -122,7 +118,6 @@ export default {
                     this.successLogin()
                 })
                 .catch((error) => {
-                    console.log(error);
                     this.isLoading = false;
                     this.error = true;
                     setTimeout(() => {
@@ -135,12 +130,11 @@ export default {
                     this.showAlert = false;
                 }, 1000);
             }
-            console.log('getting user id', this.$store.getters)
         },
         successLogin() {
             this.loginData.email = this.loginData.password = ''
             this.validLogin = true
-            this.$router.replace('/viewposts')
+            this.$router.replace('/landing')
             setTimeout(() => {
                 this.validLogin = false;
             }, 3000);

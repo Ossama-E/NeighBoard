@@ -81,7 +81,7 @@
                                       </base-button> -->
                   </card>
                 </div>
-                <div class="col-lg-4">
+                <div class="col-lg-4 mb-4">
                   <card class="border-0" hover shadow body-classes="py-5">
                     <icon
                       name="ni ni-notification-70"
@@ -102,11 +102,24 @@
                                       </base-button> -->
                   </card>
                 </div>
+                <router-link to="/viewposts" tag="div">
+                <base-button
+                  type="primary"
+                  round
+                  block
+                  size="lg"
+                  class="mt-4"
+                >
+                  Explore Posts Now
+                </base-button>
+                </router-link>
               </div>
             </div>
           </div>
         </div>
+        
       </section>
+      
     </div>
     <!-- <card gradient="secondary" shadow body-classes="p-lg-5">
                               <h4 class="mb-1">Want to work with us?</h4>
@@ -128,6 +141,7 @@
                                   Send Message
                               </base-button>
                           </card> -->
+                          
   </template>
   
   <script>
@@ -141,4 +155,5 @@
     }
   };
   </script>
+  
   

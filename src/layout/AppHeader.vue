@@ -17,6 +17,7 @@
             </div>
 
             <ul class="navbar-nav navbar-nav-hover align-items-lg-center">
+                
                 <router-link to="/landing" class="nav-link">Home</router-link>
                 <router-link to="/register" v-if="!isAuthenticated" class="nav-link">Register</router-link>
                 <router-link to="/login" v-if="!isAuthenticated" class="nav-link">Login</router-link>
@@ -46,7 +47,7 @@
                         <span class="nav-link-inner--text d-lg-none">Github</span>
                     </a>
                 </li>
-                <li class="nav-item d-none d-lg-block ml-lg-4" v-if="!isAuthenticated">
+                 <li class="nav-item d-none d-lg-block ml-lg-4" v-if="!isAuthenticated">
                 <router-link to="/tryproduct" class="btn btn-neutral btn-icon">
                 <span class="btn-inner--icon">
                     <i class="ni ni-user-run mr-2"></i>
@@ -54,13 +55,15 @@
                 <span class="nav-link-inner--text">Try Product as Guest</span>
                 </router-link>
                 </li>
-                <li class="nav-item d-none d-lg-block ml-lg-4" v-if="isAuthenticated">
-                <div  class="btn btn-neutral btn-icon">
-                <span class="btn-inner--icon">
-                    <i class="ni ni-user-run mr-2"></i>
-                </span>
-                <span @click="logout" class="nav-link-inner--text">Logout</span>
-            </div>
+                <li class="nav-item" v-if="isAuthenticated">
+                    <base-dropdown icon="ni ni-circle-08">
+    <base-button slot="title" icon="ni ni-circle-08" type="secondary" class="dropdown-toggle">
+    </base-button>
+    <router-link to="/profile" class="dropdown-item">Profile</router-link>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item text-warning" @click="logout">Logout</a>
+  </base-dropdown>
+
                 </li>
             </ul>
         </base-nav>
@@ -85,7 +88,7 @@ export default {
   methods:{
     logout() {
         this.$store.dispatch('auth/logout')
-        console.log('logging out');
+        this.$router.replace('/login')
     }
   }
 };

@@ -28,8 +28,8 @@
 
               <form role="form">
                 <base-input
-                :error="!validName ? `Please input your name` : null"
-                :valid="validName"
+                  :error="!validName ? `Please input your name` : null"
+                  :valid="validName"
                   class="mb-3"
                   placeholder="Name"
                   addon-left-icon="ni ni-hat-3"
@@ -119,13 +119,14 @@ export default {
             this.isLoading = true;
             this.$store
                 .dispatch('auth/signup', {
+                  name: this.signupData.name,
                     email: this.signupData.email,
                     password: this.signupData.password,
                 })
                 .then(() => {
 
                     this.isLoading = false;
-                    this.successSignup()
+                    this.login()
                 })
                 .catch((error) => {
                     this.isLoading = false;
@@ -139,9 +140,38 @@ export default {
 
             }
         },
-        successSignup() {
+        login() {
+        if (this.validEmail && this.validPassword) {
+            this.isLoading = true;
+            this.$store
+                .dispatch('auth/login', {
+                    email: this.signupData.email,
+                    password: this.signupData.password,
+                })
+                .then(() => {
+                    this.isLoading = false;
+                    this.successLogin()
+                })
+                .catch((error) => {
+                    console.log(error);
+                    this.isLoading = false;
+                    this.error = true;
+                    setTimeout(() => {
+                    this.error = false;
+                }, 1000);
+                });
+            } else {
+                this.showAlert = true;
+                setTimeout(() => {
+                    this.showAlert = false;
+                }, 1000);
+            }
+        },
+        successLogin() {
             this.signupData.email = this.signupData.password = this.signupData.name = ''
             this.validSignup = true
+            // this.$router.push({ path: '/landing', query: { justRegistered: true } });
+            this.$router.replace('/landing')
             setTimeout(() => {
                 this.validSignup = false;
             }, 3000);
