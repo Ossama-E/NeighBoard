@@ -8,7 +8,6 @@ const sendPost = function(postData, userId, token) {
   // post to neighbourhood and then to user
   return axios.post(`${apiURL}/neighbourhoods/${postData.addressData.neighbourhood}/posts.json?auth=` + token, postData)
     .then(res => {
-      console.log(res);
       return axios.post(`${apiURL}/users/${userId}/posts.json?auth=` + token, postData);
     })
     .catch(err => console.log(err));
@@ -20,6 +19,10 @@ const getPostsByNeighbourhood = function(neighbourhood) {
     .catch(err => console.log('error in get posts by neighbourhood', err));
 };
 
+const getPostsByCity = function(city) {
+  return axios.get(`${apiURL}/neighbourhoods/${city}.json`)
+    .catch(err => console.log('error in get posts by neighbourhood', err));
+  }
 const getPostsByUser = function(userId) {
   return axios.get(`${apiURL}/users/${userId}.json`)
     .catch(err => console.log('error in get posts by user', err));
@@ -28,4 +31,4 @@ const getPostsByUser = function(userId) {
 const getAccount = function (apiURL, userId) {
   return axios.get(`${apiURL}/users/${userId}.json`)
 }
-export {getAccount, sendPost, getPostsByNeighbourhood, getPostsByUser};
+export {getAccount, sendPost, getPostsByNeighbourhood, getPostsByUser, getPostsByCity};

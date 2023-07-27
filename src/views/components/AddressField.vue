@@ -14,6 +14,7 @@
 <script>
 import baseInput from '../../components/BaseInput.vue';
 import useScript from "./useScript";
+
 export default {
   data() {
     return {
@@ -29,34 +30,46 @@ export default {
   mounted() {
     useScript(process.env.VUE_APP_GM_URL)
       .then((cleanup) => {
-         this.$nextTick(() => {
-                let autocomplete = new google.maps.places.Autocomplete(this.$refs.streetRef.getInputRef());
+        this.$nextTick(() => {
+          let autocomplete = new google.maps.places.Autocomplete(this.$refs.streetRef.getInputRef());
 
-        this.google = autocomplete;
-        this.cleanup = cleanup;
+          this.google = autocomplete;
+          this.cleanup = cleanup;
 
-        autocomplete.addListener('place_changed', () => {
-          let place = autocomplete.getPlace();
-          let postalCode = null;
-          let fullAddress = place.formatted_address;
-          this.addressData.fullAddress = fullAddress
-          this.userInput = fullAddress;
-          let neighbourhood = null;
-          for (let i = 0; i < place.address_components.length; i++) {
-            let addressType = place.address_components[i].types[0];
-            if (addressType === 'postal_code') {
-              postalCode = place.address_components[i]['long_name'];
-              this.addressData.postalCode = postalCode;
+          autocomplete.addListener('place_changed', () => {
+            let place = autocomplete.getPlace();
+            let postalCode = null;
+            let fullAddress = place.formatted_address;
+            this.addressData.fullAddress = fullAddress
+            this.userInput = fullAddress;
+            let neighbourhood = null;
+            let city = null;
+            for (let i = 0; i < place.address_components.length; i++) {
+              let addressType = place.address_components[i].types[0];
+              if (addressType === 'postal_code') {
+                postalCode = place.address_components[i]['long_name'];
+                this.addressData.postalCode = postalCode;
+              }
+              if (addressType === 'neighborhood') {
+                neighbourhood = place.address_components[i]['long_name'];
+                this.addressData.neighbourhood = neighbourhood;
+              }
+              if (addressType === 'locality') {
+                city = place.address_components[i]['long_name'];
+                this.addressData.city = city;
+              }
+              if(postalCode && neighbourhood && city) {
+                break;
+              }
             }
-            if (addressType === 'neighborhood') {
-              neighbourhood = place.address_components[i]['long_name'];
-              this.addressData.neighbourhood = neighbourhood;
+            // If a neighbourhood isn't found, set the noNeighbourhood flag to true
+            if (!neighbourhood) {
+              this.addressData.noNeighbourhood = true;
             }
-            if(postalCode && neighbourhood) {
-              break;
+            else {
+              this.addressData.noNeighbourhood = false;
             }
-          }
-        });
+          });
         });
       });
   },

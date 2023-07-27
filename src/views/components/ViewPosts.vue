@@ -28,12 +28,17 @@
                 >
                   Explore posts
                 </base-button>
+                <div v-if="showAlert">
+            <base-alert v-model="showAlert" type="default" dismissible class="mt-4">
+              <strong>Oops</strong> We could not locate a neighbourhood for the address you sent, so we're providing you with posts in {{ searchAddressData.city }}
+            </base-alert>
+          </div>
               </div>
               <div class="mt-5 py-5 border-top text-center">
                 <div class="row justify-content-center">
                   <div class="col-lg-9">
                     <AddPostModal
-                      @new-post="refreshTable"
+                      @new-post="explorePosts"
                       :modalData="postData"
                     />
                   </div>
@@ -94,8 +99,8 @@
         </card>
       </div>
     </div>
-    <div v-else>
-      <p class="text-center mt-5">There are no posts to display.</p>
+    <div v-if="!showList">
+      <p class="text-center mt-5">There are no posts to display for this region.</p>
     </div>
   </div>
 </template>
@@ -103,7 +108,8 @@
 <script>
 import AddPostModal from '@/components/AddPostModal.vue';
 import AddressField from './AddressField.vue';
-import { getPostsByNeighbourhood } from '../../Requests.js'
+import { getPostsByNeighbourhood, getPostsByCity } from '../../Requests.js';
+
 export default {
   data() {
     return {
@@ -114,31 +120,47 @@ export default {
       },
       searchAddressData: {},
       showList: true,
+      showAlert: false,
     }
   },
   methods: {
-    getTextClass(type) {
-      if (type === 'warning') {
-        return 'text-warning text-uppercase';
+    explorePosts() {
+      if ( this.searchAddressData.noNeighbourhood) {
+        console.log('searching by city', this.searchAddressData.city)
+        this.showAlert = true
+        getPostsByCity(this.searchAddressData.city)
+          .then(res => {
+            if (res.data) {
+              this.postsList = res.data.posts;
+              this.showList = true;
+            } else {
+              this.showList = false;
+              this.postsList = [];
+            }
+          })
+          .catch(err => {
+            this.showList = false;
+            this.errorMessage = 'Failed to fetch posts by city. Please try again.';
+          });
       } else {
-        return 'text-primary text-uppercase';
+        console.log('searching by neighbourhod', this.searchAddressData.neighbourhood)
+        this.showAlert = false
+        getPostsByNeighbourhood(this.searchAddressData.neighbourhood)
+          .then(res => {
+            if (res.data) {
+              this.postsList = res.data.posts;
+              this.showList = true;
+            } else {
+              this.showList = false;
+              this.postsList = [];
+            }
+          })
+          .catch(err => {
+            this.showList = false;
+            this.errorMessage = 'Failed to fetch posts by neighbourhood. Please try again.';
+          });
       }
     },
-    explorePosts() {
-      console.log('explorePosts with this parameters', this.searchAddressData.neighbourhood)
-      getPostsByNeighbourhood(this.searchAddressData.neighbourhood)
-      .then(res => {
-        console.log(res)
-  res.data ? this.postsList = res.data.posts : this.showList = false
-
-})
-
-      .catch(err => console.log(err))
-    },
-    refreshTable() {
-      console.log('asked to refresh');
-
-    }
   },
   components: {
     AddPostModal,
