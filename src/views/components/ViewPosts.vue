@@ -108,6 +108,7 @@
 <script>
 import AddPostModal from '@/components/AddPostModal.vue';
 import AddressField from './AddressField.vue';
+import NewAddressField from './NewAddressField.vue';
 import { getPostsByNeighbourhood, getPostsByCity } from '../../Requests.js';
 
 export default {
@@ -164,7 +165,8 @@ export default {
   },
   components: {
     AddPostModal,
-    AddressField
+    AddressField,
+    NewAddressField
   },
 }
 </script>
