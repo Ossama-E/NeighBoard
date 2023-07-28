@@ -136,7 +136,6 @@ export default {
   methods: {
     explorePosts() {
       if ( this.searchAddressData.noNeighbourhood) {
-        console.log('searching by city', this.searchAddressData.city)
         this.showAlert = true
         getPostsByCity(this.searchAddressData.city)
           .then(res => {
@@ -153,7 +152,6 @@ export default {
             this.errorMessage = 'Failed to fetch posts by city. Please try again.';
           });
       } else {
-        console.log('searching by neighbourhod', this.searchAddressData.neighbourhood)
         this.showAlert = false
         getPostsByNeighbourhood(this.searchAddressData.neighbourhood)
           .then(res => {

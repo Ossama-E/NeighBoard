@@ -138,7 +138,6 @@ export default {
   methods: {
     explorePosts() {
       if ( this.searchAddressData.noNeighbourhood) {
-        console.log('searching by city', this.searchAddressData.city)
         this.showAlert = true
         getPostsByCity(this.searchAddressData.city)
           .then(res => {

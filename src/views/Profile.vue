@@ -113,13 +113,10 @@ export default {
         const userId = this.$store.getters['userId'];
         const apiURL = process.env.VUE_APP_FIREBASE_API_URL;
         getAccount(apiURL, userId).then(response => { 
-            console.log(response)
             const user = Object.keys(response.data)[0];
             this.userName = response.data[user].name;
 
             this.postsList = response.data.posts;
-            console.log('user posts:', response.data.posts);
-            console.log('user posts:', this.postsList);
             
         }).catch(err => console.error(err))
     },
