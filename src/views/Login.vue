@@ -28,23 +28,25 @@
 
               <form role="form">
                 <base-input
-                  :error="!validEmail ? `Please input your email` : null"
-                  class="mb-3"
-                  placeholder="Email"
-                  :valid="validEmail"
-                  v-model.trim="loginData.email"
-                  addon-left-icon="ni ni-email-83"
-                >
-                </base-input>
-                <base-input
-                  :error="!validPassword ? `Please Enter Your Password` : null"
-                  type="password"
-                  :valid="validPassword"
-                  v-model.trim="loginData.password"
-                  placeholder="Password"
-                  addon-left-icon="ni ni-lock-circle-open"
-                >
-                </base-input>
+      :error="emailError"
+      class="mb-3"
+      placeholder="Email"
+      :valid="validEmail"
+      v-model.trim="loginData.email"
+      addon-left-icon="ni ni-email-83"
+      @blur="validateEmail"
+    >
+    </base-input>
+    <base-input
+      :error="passwordError"
+      type="password"
+      :valid="validPassword"
+      v-model.trim="loginData.password"
+      placeholder="Password"
+      addon-left-icon="ni ni-lock-circle-open"
+      @blur="validatePassword"
+    >
+    </base-input>
                 <div class="row mt-3">
                   <div class="col-6">
                     <a href="#" class="text-light">
@@ -99,6 +101,8 @@ export default {
             isLoading: false,
             error: false,
             validLogin: false,
+            emailError: null,
+      passwordError: null,
         }
     },
     components: {
@@ -139,7 +143,15 @@ export default {
                 this.validLogin = false;
             }, 3000);
 
-        }
+        },
+        validateEmail() {
+      this.emailError = !this.validEmail ? 'Please input a valid email' : null;
+    },
+    validatePassword() {
+      this.passwordError = !this.validPassword ? 'Please enter your password' : null;
+    },
+        
+
     },
     computed: {
         validEmail(){
@@ -148,7 +160,9 @@ export default {
         },
         validPassword() {
             return this.loginData.password && this.loginData.password.length >= 1
-        }
+        },
+        
+        
     }
 };
 </script>

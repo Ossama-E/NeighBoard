@@ -28,30 +28,34 @@
 
               <form role="form">
                 <base-input
-                  :error="!validName ? `Please input your name` : null"
+                  :error="nameError"
                   :valid="validName"
                   class="mb-3"
                   placeholder="Name"
                   addon-left-icon="ni ni-hat-3"
                   v-model.trim="signupData.name"
+                  @blur="validateName"
                 >
                 </base-input>
+
                 <base-input
-                  :error="!validEmail ? `Please input a valid email` : null"
+                  :error="emailError"
                   class="mb-3"
                   placeholder="Email"
                   :valid="validEmail"
                   v-model.trim="signupData.email"
                   addon-left-icon="ni ni-email-83"
+                  @blur="validateEmail"
                 >
                 </base-input>
                 <base-input
-                  :error="!validPassword ? `Password must be at least 7 characters` : null"
+                  :error="passwordError"
                   type="password"
                   :valid="validPassword"
                   v-model.trim="signupData.password"
                   placeholder="Password"
                   addon-left-icon="ni ni-lock-circle-open"
+                  @blur="validatePassword"
                 >
                 </base-input>
                 <div class="row mt-3">
@@ -175,7 +179,18 @@ export default {
                 this.validSignup = false;
             }, 3000);
 
-        }
+        },
+        validateName() {
+      this.nameError = !this.validName ? 'Please input your name' : null;
+    },
+    validateEmail() {
+      this.emailError = !this.validEmail ? 'Please input a valid email' : null;
+    },
+    validatePassword() {
+      this.passwordError = !this.validPassword ? 'Password must be at least 7 characters' : null;
+    },
+
+
     },
     computed: {
         validEmail(){
