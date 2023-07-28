@@ -9,10 +9,13 @@ import Register from "./views/Register.vue";
 import Profile from "./views/Profile.vue";
 import ViewPosts from './views/components/ViewPosts.vue';
 import TryProduct from './views/components/TryProduct.vue';
+import NotFound from '@/views/components/NotFound.vue'
+import AlreadyIn from '@/views/components/AlreadyIn.vue'
+import store from './store/index.js'
 
 Vue.use(Router);
 
-export default new Router({
+let router = new Router({
   linkExactActiveClass: "active",
   routes: [
     {
@@ -52,6 +55,15 @@ export default new Router({
       }
     },
     {
+      path: '/already-logged-in',
+      name: 'alreadyLoggedIn',
+      components: {
+        header: AppHeader,
+        default: ViewPosts,
+        footer: AppFooter
+      }
+    },
+    {
       path: "/profile",
       name: "profile",
       components: {
@@ -77,6 +89,24 @@ export default new Router({
         default: TryProduct,
         footer: AppFooter
       }
+    },
+    {
+      path: "/alreadyin",
+      name: "already_in",
+      components: {
+        header: AppHeader,
+        default: AlreadyIn,
+        footer: AppFooter
+      }
+    },
+    {
+      path: "*",
+      name: "not_found",
+      components: {
+        header: AppHeader,
+        default: NotFound,
+        footer: AppFooter
+      }
     }
   ],
   scrollBehavior: to => {
@@ -85,5 +115,17 @@ export default new Router({
     } else {
       return { x: 0, y: 0 };
     }
-  }
+  },
 });
+
+router.beforeEach((to, from, next) => {
+  if (to.name === 'login' && store.getters['isAuthenticated']) {
+    next({ name: 'already_in' })
+  } else {
+    next()
+  }
+})
+
+
+
+export default router

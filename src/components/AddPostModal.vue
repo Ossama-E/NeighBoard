@@ -120,7 +120,8 @@ export default {
         }
     },
     exitModal() {
-      this.modalData.description = this.modalData.title = this.modalData.address = ''
+      this.modalData.description = this.modalData.title = ''
+      console.log('modaldata,', this.modalData)
       this.showModal = false;
     },
     addPost() {

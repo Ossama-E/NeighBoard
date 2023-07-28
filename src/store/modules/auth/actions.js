@@ -33,7 +33,7 @@ const handleUserAuthentication = async (context, payload, endpoint) => {
         return response;
 
     } catch (error) {
-        console.error(`Failed to authenticate user: ${error.response.data}`);
+        console.error(`Failed to authenticate user: ${error}`);
         throw new Error(error.response.data.message || 'Failed to authenticate user.');
     }
 }

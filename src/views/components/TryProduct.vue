@@ -21,33 +21,47 @@
       </div>
     </div>
     <div>
-      <section class="section section-lg pt-lg-0 section-contact-us">
+      <section class="section section-skew">
         <div class="container">
-          <div class="row justify-content-center mt--300">
-            <div class="col-lg-8">
-              <div>
-                <card gradient="secondary" shadow body-classes="p-lg-5">
-                  <h4 class="mb-1">Lucky you, you get to try our product :)</h4>
-                  <p class="mt-0">Your feedback is very important to us.</p>
-                  <base-input
-                    class="mt-5"
-                    placeholder="Your name (optional)"
-                    addon-left-icon="ni ni-user-run"
-                  ></base-input>
-                  <AddressField :address-data="addressData" />
-                  <base-button
-                    type="primary"
-                    @click="explorePosts"
-                    round
-                    block
-                    size="lg"
+          <card shadow class="card-profile mt--300" no-body>
+            <div class="px-4">
+              <div class="text-center mt-5">
+                <h5>Please enter the address you'd like to check out</h5>
+                <address-field :address-data="searchAddressData" />
+                <base-button
+                  type="primary"
+                  round
+                  block
+                  size="lg"
+                  @click="explorePosts"
+                >
+                  Explore posts
+                </base-button>
+                <div v-if="showAlert">
+                  <base-alert
+                    v-model="showAlert"
+                    type="default"
+                    dismissible
+                    class="mt-4"
                   >
-                    Explore Posts
-                  </base-button>
-                </card>
+                    <strong>Oops</strong> We could not locate a neighbourhood
+                    for the address you sent, so we're providing you with posts
+                    in {{ searchAddressData.city }}
+                  </base-alert>
+                </div>
+              </div>
+              <div class="mt-5 py-5 border-top text-center">
+                <div class="row justify-content-center">
+                  <div class="col-lg-9">
+                    <AddPostModal
+                      @new-post="explorePosts"
+                      :modalData="postData"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          </card>
         </div>
       </section>
       <div class="container">
@@ -103,32 +117,67 @@
 </template>
 
 <script>
+import AddPostModal from '@/components/AddPostModal.vue';
 import AddressField from './AddressField.vue';
-import { getPostsByNeighbourhood } from '../../Requests.js'
+import NewAddressField from './NewAddressField.vue';
+import { getPostsByNeighbourhood, getPostsByCity } from '../../Requests.js';
+
 export default {
   data() {
     return {
-      addressData: {
-        neighbourhood: null,
-        postalCode: null,
-        fullAddress: null,
-      },
       postsList: [],
+      postData: {
+        showModal: false,
+        addressData: {},
+      },
+      searchAddressData: {},
+      showList: true,
+      showAlert: false,
     }
   },
-  components: {
-    AddressField
-  },
-  props: {},
   methods: {
     explorePosts() {
-      // const userId = this.$store.getters['auth/userId'];
-      // const token =  this.$store.getters['auth/token'];
-      getPostsByNeighbourhood(this.addressData.neighbourhood)
-      .then(res => {console.log('posts from searching for this neighbhood, ', res.data.posts)
-    this.postsList = res.data.posts})
-      .catch(err => console.log(err))
-    }
+      if ( this.searchAddressData.noNeighbourhood) {
+        console.log('searching by city', this.searchAddressData.city)
+        this.showAlert = true
+        getPostsByCity(this.searchAddressData.city)
+          .then(res => {
+            if (res.data) {
+              this.postsList = res.data.posts;
+              this.showList = true;
+            } else {
+              this.showList = false;
+              this.postsList = [];
+            }
+          })
+          .catch(err => {
+            this.showList = false;
+            this.errorMessage = 'Failed to fetch posts by city. Please try again.';
+          });
+      } else {
+        console.log('searching by neighbourhod', this.searchAddressData.neighbourhood)
+        this.showAlert = false
+        getPostsByNeighbourhood(this.searchAddressData.neighbourhood)
+          .then(res => {
+            if (res.data) {
+              this.postsList = res.data.posts;
+              this.showList = true;
+            } else {
+              this.showList = false;
+              this.postsList = [];
+            }
+          })
+          .catch(err => {
+            this.showList = false;
+            this.errorMessage = 'Failed to fetch posts by neighbourhood. Please try again.';
+          });
+      }
+    },
   },
-};
+  components: {
+    AddPostModal,
+    AddressField,
+    NewAddressField
+  },
+}
 </script>

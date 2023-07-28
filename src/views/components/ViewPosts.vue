@@ -29,10 +29,17 @@
                   Explore posts
                 </base-button>
                 <div v-if="showAlert">
-            <base-alert v-model="showAlert" type="default" dismissible class="mt-4">
-              <strong>Oops</strong> We could not locate a neighbourhood for the address you sent, so we're providing you with posts in {{ searchAddressData.city }}
-            </base-alert>
-          </div>
+                  <base-alert
+                    v-model="showAlert"
+                    type="default"
+                    dismissible
+                    class="mt-4"
+                  >
+                    <strong>Oops</strong> We could not locate a neighbourhood
+                    for the address you sent, so we're providing you with posts
+                    in {{ searchAddressData.city }}
+                  </base-alert>
+                </div>
               </div>
               <div class="mt-5 py-5 border-top text-center">
                 <div class="row justify-content-center">
@@ -100,7 +107,9 @@
       </div>
     </div>
     <div v-if="!showList">
-      <p class="text-center mt-5">There are no posts to display for this region.</p>
+      <p class="text-center mt-5">
+        There are no posts to display for this region.
+      </p>
     </div>
   </div>
 </template>
