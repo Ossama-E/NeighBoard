@@ -1,6 +1,7 @@
 const webpack = require('webpack');
-  publicPath: '/NeighBoards/',
+  
 module.exports = {
+  publicPath: '/NeighBoards/',
   configureWebpack: {
     // Set up all the aliases we use in our app.
     plugins: [
