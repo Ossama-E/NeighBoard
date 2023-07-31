@@ -13,7 +13,7 @@
 
 <script>
 import baseInput from '../../components/BaseInput.vue';
-import useScript from "./useScript";
+import useScript from '../../views/components/useScript';
 
 export default {
   data() {
@@ -83,6 +83,13 @@ export default {
       type: Object,
       default: () => {},
     }
-  }
+  },
+  watch: {
+  userInput(newVal) {
+    if (!newVal) {
+      this.$emit('input-cleared');
+    }
+  },
+},
 }
 </script>

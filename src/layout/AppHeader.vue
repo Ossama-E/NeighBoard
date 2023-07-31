@@ -22,16 +22,6 @@
                 <router-link to="/register" v-if="!isAuthenticated" class="nav-link">Register</router-link>
                 <router-link to="/login" v-if="!isAuthenticated" class="nav-link">Login</router-link>
                 <router-link to="/viewposts" v-if="isAuthenticated" class="nav-link">Explore Posts</router-link>
-                <base-dropdown tag="li" class="nav-item">
-                    <a slot="title" href="#" class="nav-link" data-toggle="dropdown" role="button">
-                        <i class="ni ni-collection d-lg-none"></i>
-                        <span class="nav-link-inner--text">Examples</span>
-                    </a>
-                    <router-link to="/landing" class="dropdown-item">Landing</router-link>
-                    <router-link to="/profile" class="dropdown-item">Profile</router-link>
-                    <router-link to="/login" class="dropdown-item">Login</router-link>
-                    <router-link to="/register" class="dropdown-item">Register</router-link>
-                </base-dropdown>
             </ul>
             <ul class="navbar-nav align-items-lg-center ml-lg-auto">
                 <li class="nav-item">

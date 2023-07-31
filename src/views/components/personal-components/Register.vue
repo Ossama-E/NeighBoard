@@ -23,30 +23,41 @@
           >
             <template>
               <div class="text-center text-muted mb-4">
-                <h2>Login</h2>
+                <h2>Register</h2>
               </div>
 
               <form role="form">
                 <base-input
-      :error="emailError"
-      class="mb-3"
-      placeholder="Email"
-      :valid="validEmail"
-      v-model.trim="loginData.email"
-      addon-left-icon="ni ni-email-83"
-      @blur="validateEmail"
-    >
-    </base-input>
-    <base-input
-      :error="passwordError"
-      type="password"
-      :valid="validPassword"
-      v-model.trim="loginData.password"
-      placeholder="Password"
-      addon-left-icon="ni ni-lock-circle-open"
-      @blur="validatePassword"
-    >
-    </base-input>
+                  :error="nameError"
+                  :valid="validName"
+                  class="mb-3"
+                  placeholder="Name"
+                  addon-left-icon="ni ni-hat-3"
+                  v-model.trim="signupData.name"
+                  @blur="validateName"
+                >
+                </base-input>
+
+                <base-input
+                  :error="emailError"
+                  class="mb-3"
+                  placeholder="Email"
+                  :valid="validEmail"
+                  v-model.trim="signupData.email"
+                  addon-left-icon="ni ni-email-83"
+                  @blur="validateEmail"
+                >
+                </base-input>
+                <base-input
+                  :error="passwordError"
+                  type="password"
+                  :valid="validPassword"
+                  v-model.trim="signupData.password"
+                  placeholder="Password"
+                  addon-left-icon="ni ni-lock-circle-open"
+                  @blur="validatePassword"
+                >
+                </base-input>
                 <div class="row mt-3">
                   <div class="col-6">
                     <a href="#" class="text-light">
@@ -55,15 +66,15 @@
                   </div>
                   <div class="col-6 text-right">
                     <a href="#" class="text-light">
-                      <router-link to="/register">
-                        <small>Create new account</small>
+                      <router-link to="/login">
+                        <small>Login Instead</small>
                       </router-link>
                     </a>
                   </div>
                 </div>
                 <div class="text-center">
                   <base-button type="primary" class="my-4" @click="submitForm"
-                    >Sign In</base-button
+                    >Create account</base-button
                   >
                 </div>
               </form>
@@ -74,12 +85,12 @@
               <strong>Invalid!</strong> Please Fill All Required Fields
             </base-alert>
           </div>
-          <base-alert v-if="validLogin" type="success" dismissible>
+          <base-alert v-if="validSignup" type="success" dismissible>
             <strong>Success!</strong> Account Registered!
           </base-alert>
           <div v-if="error">
             <base-alert v-model="showAlert" type="warning" dismissible>
-              <strong>Error</strong> Incorrect username or password
+              <strong>Error</strong> Error Signing Up, Try Again Later
             </base-alert>
           </div>
         </div>
@@ -88,11 +99,11 @@
   </section>
 </template>
 <script>
-import BaseSpinner from './components/BaseSpinner.vue'
+import BaseSpinner from '../BaseSpinner.vue'
 export default {
     data() {
         return {
-            loginData: {
+            signupData: {
                 name: null,
                 email: null,
                 password: null,
@@ -100,9 +111,7 @@ export default {
             showAlert: false,
             isLoading: false,
             error: false,
-            validLogin: false,
-            emailError: null,
-      passwordError: null,
+            validSignup: false,
         }
     },
     components: {
@@ -110,18 +119,45 @@ export default {
     },
     methods: {
         submitForm() {
+        if (this.validEmail && this.validPassword && this.validName) {
+            this.isLoading = true;
+            this.$store
+                .dispatch('signup', {
+                  name: this.signupData.name,
+                    email: this.signupData.email,
+                    password: this.signupData.password,
+                })
+                .then(() => {
+
+                    this.isLoading = false;
+                    this.login()
+                })
+                .catch((error) => {
+                    this.isLoading = false;
+                    this.error = true;
+                });
+            } else {
+                this.showAlert = true;
+                setTimeout(() => {
+                    this.showAlert = false;
+                }, 1000);
+
+            }
+        },
+        login() {
         if (this.validEmail && this.validPassword) {
             this.isLoading = true;
             this.$store
                 .dispatch('login', {
-                    email: this.loginData.email,
-                    password: this.loginData.password,
+                    email: this.signupData.email,
+                    password: this.signupData.password,
                 })
                 .then(() => {
                     this.isLoading = false;
                     this.successLogin()
                 })
                 .catch((error) => {
+                    console.log(error);
                     this.isLoading = false;
                     this.error = true;
                     setTimeout(() => {
@@ -136,33 +172,37 @@ export default {
             }
         },
         successLogin() {
-            this.loginData.email = this.loginData.password = ''
-            this.validLogin = true
+            this.signupData.email = this.signupData.password = this.signupData.name = ''
+            this.validSignup = true
             this.$router.replace('/')
             setTimeout(() => {
-                this.validLogin = false;
+                this.validSignup = false;
             }, 3000);
 
         },
-        validateEmail() {
+        validateName() {
+      this.nameError = !this.validName ? 'Please input your name' : null;
+    },
+    validateEmail() {
       this.emailError = !this.validEmail ? 'Please input a valid email' : null;
     },
     validatePassword() {
-      this.passwordError = !this.validPassword ? 'Please enter your password' : null;
+      this.passwordError = !this.validPassword ? 'Password must be at least 7 characters' : null;
     },
-        
+
 
     },
     computed: {
         validEmail(){
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return this.loginData.email && emailRegex.test(this.loginData.email);
+            return this.signupData.email && emailRegex.test(this.signupData.email);
         },
         validPassword() {
-            return this.loginData.password && this.loginData.password.length >= 1
+            return this.signupData.password && this.signupData.password.length >= 7
         },
-        
-        
+        validName() {
+          return this.signupData.name && this.signupData.name.length > 0
+        }
     }
 };
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div class="text-center">
     <base-button
-      v-if="!attemptedPost"
+      v-if="!attemptedToPost"
       type="primary"
       text-align="center"
       class="mb-3"
@@ -11,7 +11,7 @@
     </base-button>
     <router-link to="/register">
       <base-button
-        v-if="attemptedPost"
+        v-if="attemptedToPost"
         type="primary"
         text-align="center"
         class="mb-3"
@@ -52,6 +52,7 @@
               :key="componentKey"
               :address-data="modalData.addressData"
             />
+
             <form addon-left-icon="ni ni-map-big">
               <textarea
                 v-model.trim="modalData.description"
@@ -60,17 +61,41 @@
                 placeholder="Description"
               ></textarea>
             </form>
-            <div class="text-right">
-              <base-button
-                outline
-                type="primary"
-                class="my-4"
-                @click="exitModal"
+            <div class="last-level">
+              <div class="form-check-group">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    id="Report"
+                    value="Report"
+                    v-model="modalData.postType"
+                  />
+                  <label class="form-check-label" for="Report">Report</label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    id="Activity"
+                    value="Activity"
+                    v-model="modalData.postType"
+                  />
+                  <label class="form-check-label" for="Activity">Activity</label>
+                </div>
+              </div>
+              <div>
+                <base-button
+                  outline
+                  type="primary"
+                  class="my-4"
+                  @click="exitModal"
                 >Back</base-button
-              >
-              <base-button type="primary" class="my-4" @click="addPost"
+                >
+                <base-button type="primary" class="my-4" @click="addPost"
                 >Post</base-button
-              >
+                >
+              </div>
             </div>
           </form>
         </template>
@@ -81,19 +106,19 @@
 
 <script>
 import Modal from "@/components/Modal.vue";
-import AddressField from '../views/components/AddressField.vue';
-import { sendPost } from '../Requests.js'
+import AddressField from '@/components/personal-components/AddressField.vue';
+import { sendPost } from '../../Requests.js'
 export default {
   data() {
     return {
       showAlert: false,
-      attemptedPost: false,
+      attemptedToPost: false,
       componentKey: 0,
       showModal: false,
     };
   },
   created() {
-    this.attemptedPost = false
+    this.attemptedToPost = false
   },
   props: {
     modalData: {
@@ -112,7 +137,7 @@ export default {
       if (this.isAuthenticated) this.showModal = true
       else {
         this.showAlert = true
-        this.attemptedPost = true,
+        this.attemptedToPost = true,
         this.componentKey = Math.random();
         setTimeout(() => {
                     this.showAlert = false;
@@ -120,8 +145,8 @@ export default {
         }
     },
     exitModal() {
-      this.modalData.description = this.modalData.title = ''
-      console.log('modaldata,', this.modalData)
+      this.modalData.description = this.modalData.title = null
+      this.modalData.postType = 'Activity'
       this.showModal = false;
     },
     addPost() {
@@ -131,7 +156,7 @@ export default {
       .then(() => {this.$emit('new-post')
       this.exitModal()})
       .catch(err => console.log('error in sendPost', err)).then()
-      
+
     }
   },
   computed: {
@@ -141,3 +166,21 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.last-level {
+  display: flex;
+  align-items: center; /* Vertically align the items */
+  justify-content: space-between; /* Distribute items across the line */
+}
+
+.form-check-group {
+  display: flex; /* Place the radio buttons on the same line */
+  margin-right: 10px; /* Some spacing between the radios and buttons */
+}
+
+.form-check-group .form-check {
+  margin-right: 10px; /* Some spacing between the radio buttons */
+}
+</style>
+

@@ -70,7 +70,7 @@
 
 
 <script>
-import AddressField from './AddressField.vue';
+import AddressField from '@/components/personal-components/AddressField.vue';
 export default {
   data() {
     return {

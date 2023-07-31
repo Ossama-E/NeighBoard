@@ -1,5 +1,6 @@
 import axios from "axios";
 
+
 const apiURL = process.env.VUE_APP_FIREBASE_API_URL;
 // const userId = this.$store.getters['auth/userId'];
 // const token =  this.$store.getters['auth/token'];

@@ -53,51 +53,7 @@
         </section>
         <div  class="container">
       <div v-for="post in postsList" :key="post.title">
-        <card shadow class="posts card-profile mt-5">
-          <div class="px-4">
-            <div class="row justify-content-center">
-              <div class="col-lg-3 order-lg-2">
-                <div class="card-profile-image">
-                  <a href="#">
-                    <img
-                      v-lazy="'img/theme/team-4-800x800.png'"
-                      class="rounded-circle"
-                    />
-                  </a>
-                </div>
-              </div>
-              <div
-                class="col-lg-4 order-lg-3 text-lg-right align-self-lg-center"
-              >
-                <div class="card-profile-actions py-4 mt-lg-0">
-                  <base-button type="info" size="sm" class="mr-4"
-                    >Connect</base-button
-                  >
-                  <base-button type="default" size="sm" class="float-right"
-                    >Message</base-button
-                  >
-                </div>
-              </div>
-            </div>
-            <div class="text-center mt-5">
-              <icon
-                name="ni ni-square-pin"
-                type="success"
-                rounded
-                class="mb-4"
-              ></icon>
-              <h3>{{post.title}}</h3>
-              <div class="h6 font-weight-300">
-                <i class="ni location_pin mr-2"></i
-                >{{ post.addressData.fullAddress }}
-              </div>
-              <div class="h6 mt-4">
-                <i class="ni business_briefcase-24 mr-2"></i
-                >{{ post.description }}
-              </div>
-            </div>
-          </div>
-        </card>
+        <post-template from-profile :post="post"/>
       </div>
     </div>
     <div v-if="noPosts">
@@ -105,8 +61,10 @@
     </div>
     </div>
 </template>
+
 <script>
-import {getAccount} from '../Requests.js'
+import {getAccount} from '../../../Requests.js'
+import PostTemplate from '../../../components/personal-components/PostTemplate.vue';
 export default {
     async mounted(){
         
@@ -141,6 +99,9 @@ export default {
                 return Object.keys(this.postsList).length
             }
         }
+    },
+    components: {
+      PostTemplate,
     }
 };
 </script>

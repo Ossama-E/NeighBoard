@@ -15,6 +15,7 @@
             ]">
 
           <li v-for="tab in tabs"
+          @click="contentLog(tab)"
               class="nav-item"
               :key="tab.id || tab.title">
 
@@ -176,6 +177,9 @@ export default {
       if (index > -1) {
         tabs.splice(index, 1);
       }
+    },
+    contentLog(type) {
+      this.$emit('tab-change', type.title)
     }
   },
   mounted() {

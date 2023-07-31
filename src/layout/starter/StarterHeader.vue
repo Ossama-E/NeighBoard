@@ -50,10 +50,6 @@
                     </div>
                 </li>
                 <li class="nav-item dropdown">
-                    <a href="#" class="nav-link" data-toggle="dropdown" role="button">
-                        <i class="ni ni-collection d-lg-none"></i>
-                        <span class="nav-link-inner--text">Examples</span>
-                    </a>
                     <div class="dropdown-menu">
                         <router-link to="/landing" class="dropdown-item">Landing</router-link>
                         <router-link to="/profile" class="dropdown-item">Profile</router-link>

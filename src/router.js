@@ -4,12 +4,12 @@ import AppHeader from "./layout/AppHeader";
 import AppFooter from "./layout/AppFooter";
 import Components from "./views/Components.vue";
 import Landing from "./views/Landing.vue";
-import Login from "./views/Login.vue";
-import Register from "./views/Register.vue";
-import Profile from "./views/Profile.vue";
-import ViewPosts from './views/components/ViewPosts.vue';
-import TryProduct from './views/components/TryProduct.vue';
-import NotFound from '@/views/components/NotFound.vue'
+import Login from "@/views/components/personal-components/Login.vue";
+import Register from "@/views/components/personal-components/Register.vue";
+import Profile from "@/views/components/personal-components/Profile.vue";
+import ViewPosts from '@/components/personal-components/ViewPosts.vue';
+import TryProduct from '@/components/personal-components/TryProduct.vue';
+import NotFound from '@/views/components/personal-components/NotFound.vue'
 import AlreadyIn from '@/views/components/AlreadyIn.vue'
 import store from './store/index.js'
 
