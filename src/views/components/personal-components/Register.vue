@@ -112,6 +112,9 @@ export default {
             isLoading: false,
             error: false,
             validSignup: false,
+            nameError: null,
+            passwordError: null,
+            emailError: null
         }
     },
     components: {

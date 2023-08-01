@@ -87,68 +87,73 @@
 import AddPostModal from '@/components/personal-components/AddPostModal.vue';
 import AddressField from '@/components/personal-components/AddressField.vue';
 import PostTemplate from './PostTemplate.vue';
-import { getPostsByNeighbourhood, getPostsByCity } from '../../Requests.js';
 import Tabs from "@/components/Tabs/Tabs.vue";
 import TabPane from "@/components/Tabs/TabPane.vue";
+import { getPostsByNeighbourhood, getPostsByCity } from '../../Requests.js';
 
 export default {
   data() {
     return {
       postsList: [],
       postData: {
-        showModal: false,
         addressData: {},
+        postType: 'Activity',
       },
-      searchAddressData: {},
+      searchAddressData: {
+        city: '',
+        neighbourhood: '',
+        noNeighbourhood: false,
+        fullAddress: '',
+      },
       showList: true,
       showAlert: false,
-      filteredList: [],
+      listType: 'All Posts',
+      filteredList : [],
     }
   },
   methods: {
     explorePosts() {
-      if ( this.searchAddressData.noNeighbourhood) {
-        this.showAlert = true
-        getPostsByCity(this.searchAddressData.city)
-          .then(res => {
-            if (res.data) {
-              this.postsList = res.data.posts;
-              this.showList = true;
-            } else {
-              this.showList = false;
-              this.postsList = [];
-            }
-          })
-          .catch(err => {
-            this.showList = false;
-            this.errorMessage = 'Failed to fetch posts by city. Please try again.';
-          });
+  if (this.searchAddressData.noNeighbourhood) {
+    this.showAlert = true;
+    this.fetchPosts(getPostsByCity, this.searchAddressData.city);
+  } else {
+    this.showAlert = false;
+    this.fetchPosts(getPostsByNeighbourhood, this.searchAddressData.neighbourhood);
+  }
+},
+    fetchPosts(fetchMethod, param) {
+  fetchMethod(param)
+    .then(res => {
+      if (res.data) {
+        console.log('from fetching ', res.data.name)
+        this.postsList = res.data.posts;
+        this.showList = true;
       } else {
-        this.showAlert = false
-        getPostsByNeighbourhood(this.searchAddressData.neighbourhood)
-          .then(res => {
-            if (res.data) {
-              this.postsList = res.data.posts;
-              this.showList = true;
-            } else {
-              this.showList = false;
-              this.postsList = [];
-            }
-          })
-          .catch(err => {
-            this.showList = false;
-            this.errorMessage = 'Failed to fetch posts by neighbourhood. Please try again.';
-          });
+        this.showList = false;
+        this.postsList = [];
       }
-    },
+      this.changeList(this.listType);
+    })
+    .catch(err => {
+      this.showList = false;
+      this.errorMessage = `Failed to fetch posts. Please try again.`;
+    });
+},
     changeList(type) {
-    this.listType = type;
-    if (type == 'All Posts') {
-      this.filteredList = this.postsList;
-      return;
-    }
-    let postsArray = Object.values(this.postsList);
-    this.filteredList = postsArray.filter(post => post.postType == type);
+      this.listType = type;
+      if (type == 'All Posts') {
+        this.filteredList = this.postsList;
+        return;
+      }
+      let postsArray = Object.values(this.postsList);
+      this.filteredList = postsArray.filter(post => post.postType == type);
+    },
+
+    resetSearchAddressData() {
+    this.searchAddressData.city = '';
+    this.searchAddressData.neighbourhood = '';
+    this.searchAddressData.noNeighbourhood = false;
+    this.searchAddressData.fullAddress = '';
   },
   },
   components: {
@@ -158,5 +163,15 @@ export default {
     Tabs,
     TabPane
   },
+  watch: {
+  'searchAddressData': {
+    handler: function(val, oldVal) {
+      if (val.fullAddress.trim() === '') {
+        this.resetSearchAddressData();
+      }
+    },
+    deep: true
+  }
+},
 }
 </script>
